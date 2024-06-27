@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "kernelspec": {
+      "name": "python",
+      "display_name": "Python (Pyodide)",
+      "language": "python"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "python",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8"
+    }
+  },
+  "nbformat_minor": 4,
+  "nbformat": 4,
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": "# 1. Importing and Exploring Data\n\nimport pandas as pd\n\n# Load the dataset\ndata = pd.read_csv('app/data/diabetes_dataset1.csv')\n\n# Display the first few rows of the dataset\nprint(data.head())\n\n# Summary statistics\nprint(data.describe())\n\n# Check for missing values\nprint(data.isnull().sum())\n\n# Basic info\nprint(data.info())\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 2. Data Analysis and Pattern Discovery\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Gender distribution\nplt.figure(figsize=(10, 6))\nsns.countplot(data['Gender'])\nplt.title('Gender Distribution')\nplt.show()\n\n# Class distribution\nplt.figure(figsize=(10, 6))\nsns.countplot(data['Class'])\nplt.title('Class Distribution')\nplt.show()\n\n# Pairplot to see relationships between features\nsns.pairplot(data, hue='Class')\nplt.show()\n\n# Correlation matrix\nplt.figure(figsize=(12, 10))\nsns.heatmap(data.corr(), annot=True, cmap='coolwarm')\nplt.title('Correlation Matrix')\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 3. Data Cleaning and Preparation\n\nimport pandas as pd\n\n# Load the dataset\ndata = pd.read_csv('app/data/diabetes_dataset1.csv')\n\n# Handle missing values (if any)\n# For simplicity, we'll fill missing values with the mean of the column\ndata.fillna(data.mean(), inplace=True)\n\n# Encode categorical data\nfrom sklearn.preprocessing import LabelEncoder\n\nlabel_encoder = LabelEncoder()\ndata['Gender'] = label_encoder.fit_transform(data['Gender'])\n\n# Convert boolean columns to integers\nfor column in data.columns:\n    if data[column].dtype == 'bool':\n        data[column] = data[column].astype(int)\n\n# Display cleaned data\nprint(data.head())\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 3. More Detailed Data Analysis\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Age distribution\nplt.figure(figsize=(10, 6))\nsns.histplot(data['Age'], bins=20, kde=True)\nplt.title('Age Distribution')\nplt.xlabel('Age')\nplt.ylabel('Count')\nplt.show()\n\n# BMI distribution\nplt.figure(figsize=(10, 6))\nsns.histplot(data['BMI'], bins=20, kde=True)\nplt.title('BMI Distribution')\nplt.xlabel('BMI')\nplt.ylabel('Count')\nplt.show()\n\n# Gender vs Class\nplt.figure(figsize=(10, 6))\nsns.countplot(x='Gender', hue='Class', data=data)\nplt.title('Gender vs Class')\nplt.show()\n\n# Age vs Class\nplt.figure(figsize=(10, 6))\nsns.boxplot(x='Class', y='Age', data=data)\nplt.title('Age vs Class')\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 4. Data Processing and Transformation\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\n\n# Load the dataset\ndata = pd.read_csv('app/data/diabetes_dataset1.csv')\n\n# Encode categorical data and clean the data as done previously\nlabel_encoder = LabelEncoder()\ndata['Gender'] = label_encoder.fit_transform(data['Gender'])\nfor column in data.columns:\n    if data[column].dtype == 'bool':\n        data[column] = data[column].astype(int)\n\n# Split the data into features and target\nX = data.drop('Class', axis=1)\ny = data['Class'].astype(int)\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# Standardize the data\nscaler = StandardScaler()\nX_train = scaler.fit_transform(X_train)\nX_test = scaler.transform(X_test)\n\n# Save the preprocessed data for further use\npd.DataFrame(X_train).to_csv('X_train.csv', index=False)\npd.DataFrame(X_test).to_csv('X_test.csv', index=False)\npd.DataFrame(y_train).to_csv('y_train.csv', index=False)\npd.DataFrame(y_test).to_csv('y_test.csv', index=False)\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 4. Bivariate Analysis\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Scatter plot of Age vs BMI\nplt.figure(figsize=(10, 6))\nsns.scatterplot(x='Age', y='BMI', hue='Class', data=data)\nplt.title('Age vs BMI')\nplt.show()\n\n# Bar plot of Gender vs Class\nplt.figure(figsize=(10, 6))\nsns.barplot(x='Gender', y='Class', data=data, estimator=lambda x: sum(x == 1) / len(x))\nplt.title('Gender vs Class')\nplt.ylabel('Proportion of Class 1')\nplt.show()\n\n# Heatmap of correlations\nplt.figure(figsize=(12, 10))\nsns.heatmap(data.corr(), annot=True, cmap='coolwarm')\nplt.title('Correlation Matrix')\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 5. Model Building and Training\n\nimport pandas as pd\nimport tensorflow as tf\nfrom tensorflow.keras.models import Sequential\nfrom tensorflow.keras.layers import Dense\n\n# Load the preprocessed data\nX_train = pd.read_csv('X_train.csv')\nX_test = pd.read_csv('X_test.csv')\ny_train = pd.read_csv('y_train.csv')\ny_test = pd.read_csv('y_test.csv')\n\n# Build the neural network\nmodel = Sequential()\nmodel.add(Dense(16, input_dim=X_train.shape[1], activation='relu'))\nmodel.add(Dense(8, activation='relu'))\nmodel.add(Dense(1, activation='sigmoid'))\n\n# Compile the model\nmodel.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])\n\n# Train the model\nhistory = model.fit(X_train, y_train, epochs=100, batch_size=10, validation_data=(X_test, y_test))\n\n# Save the training history\nimport joblib\njoblib.dump(history.history, 'training_history.pkl')\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 5. Multiple Plots\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Pairplot to see relationships between features\nsns.pairplot(data, hue='Class')\nplt.show()\n\n# Violin plot of Age vs Class\nplt.figure(figsize=(10, 6))\nsns.violinplot(x='Class', y='Age', data=data)\nplt.title('Age vs Class')\nplt.show()\n\n# Swarm plot of BMI vs Class\nplt.figure(figsize=(10, 6))\nsns.swarmplot(x='Class', y='BMI', data=data)\nplt.title('BMI vs Class')\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 6. Model Evaluation and Performance Analysis\n\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport joblib\n\n# Load the training history\nhistory = joblib.load('training_history.pkl')\n\n# Plot training & validation accuracy values\nplt.figure(figsize=(10, 6))\nplt.plot(history['accuracy'])\nplt.plot(history['val_accuracy'])\nplt.title('Model accuracy')\nplt.ylabel('Accuracy')\nplt.xlabel('Epoch')\nplt.legend(['Train', 'Test'], loc='upper left')\nplt.show()\n\n# Plot training & validation loss values\nplt.figure(figsize=(10, 6))\nplt.plot(history['loss'])\nplt.plot(history['val_loss'])\nplt.title('Model loss')\nplt.ylabel('Loss')\nplt.xlabel('Epoch')\nplt.legend(['Train', 'Test'], loc='upper left')\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 6. Time Series Analysis (if applicable)\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Assuming there's a Date column in the dataset\nif 'Date' in data.columns:\n    data['Date'] = pd.to_datetime(data['Date'])\n    \n    # Plotting the data over time\n    plt.figure(figsize=(10, 6))\n    sns.lineplot(x='Date', y='BMI', hue='Class', data=data)\n    plt.title('BMI over Time')\n    plt.show()\n    \n    # Plotting the data over time by Gender\n    plt.figure(figsize=(10, 6))\n    sns.lineplot(x='Date', y='BMI', hue='Gender', data=data)\n    plt.title('BMI over Time by Gender')\n    plt.show()\n    ",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 7. 3D Plots\n\nimport matplotlib.pyplot as plt\nfrom mpl_toolkits.mplot3d import Axes3D\nimport seaborn as sns\n\n# 3D scatter plot of Age, BMI, and Glucose\nfig = plt.figure(figsize=(10, 8))\nax = fig.add_subplot(111, projection='3d')\nax.scatter(data['Age'], data['BMI'], data['Glucose'], c=data['Class'], cmap='coolwarm', s=50)\nax.set_xlabel('Age')\nax.set_ylabel('BMI')\nax.set_zlabel('Glucose')\nplt.title('3D Scatter Plot of Age, BMI, and Glucose')\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "# 7. Model Saving and Results Interpretation\n\nimport joblib\nimport tensorflow as tf\n\n# Evaluate the model on the training set\ntrain_loss, train_accuracy = model.evaluate(X_train, y_train, verbose=0)\nprint(f'Training Accuracy: {train_accuracy:.4f}')\n\n# Evaluate the model on the testing set\ntest_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=0)\nprint(f'Testing Accuracy: {test_accuracy:.4f}')\n\n# Save the model and scaler\nmodel.save('diabetes_model.h5')\njoblib.dump(scaler, 'scaler.pkl')\n\n# Interpretation of results\nprint(f'Training Loss: {train_loss:.4f}, Training Accuracy: {train_accuracy:.4f}')\nprint(f'Testing Loss: {test_loss:.4f}, Testing Accuracy: {test_accuracy:.4f}')\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    }
+  ]
+}
